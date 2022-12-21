@@ -41,7 +41,7 @@ from utils.constants import (
     COLOR_WINDOWS,
     COLOR_WINMAN,
 )
-from user.custom_apps import HomeApp, NumpadApp, VSCodeApp
+from user.custom_apps import HomeApp, NumpadApp, VSCodeApp, MenuApp
 
 
 class AppSettings(KeyAppSettings):
@@ -80,15 +80,9 @@ class AppSettings(KeyAppSettings):
         COLOR_SUBLIME_MERGE: 0x00B3B3,
         COLOR_TERMINAL: COLOR_10,
     }
-    apps: Dict[int, KeyApp] = {}
 
 def init(app_pad):
     settings = AppSettings()
-    settings.apps = {
-        "default": HomeApp(app_pad, settings),
-        0: NumpadApp(app_pad, settings),
-        1: VSCodeApp(app_pad, settings)
-    }
-    return HomeApp(app_pad, settings)
+    return MenuApp(app_pad, settings)
 
 DEFAULT_APP = init

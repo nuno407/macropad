@@ -18,7 +18,7 @@ from user.custom_apps.base_app import BaseApp
 
 class HomeApp(BaseApp):
     """
-    Main menu app.
+    Home app.
     """
 
     name = "Home"

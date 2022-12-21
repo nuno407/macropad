@@ -1,42 +1,24 @@
 try:
-    from typing import Optional
+    from typing import Optional, Any
 except ImportError:
     pass
 from utils.app_pad import AppPad
 from utils.apps.key import (
+    Key,
     KeyApp,
-    KeyAppSettings,
 )
 from utils.commands import (
-    Command,
-    AppSwitchException
+    ConsumerControlCode,
+    Media,
+    PreviousAppCommand,
 )
 
-class SwitchAppCommandBasedOnEncoderRotation(Command):
-    """A command to switch to a new App."""
-
-    def __init__(self, app_pad: AppPad):
-        super().__init__()
-        self.app_pad = app_pad
-
-    def execute(self, app: KeyApp):
-        apps: dict = app.settings.get("apps")
-        default_app: BaseApp = apps.get("default")
-        new_app = apps.get(self.app_pad.encoder_position, default_app)
-        raise AppSwitchException(new_app)
-
-class SwitchAppCommandBasedOnEncoderPress(Command):
-    """A command to switch to a new App."""
-
-    def execute(self, app: KeyApp):
-        apps: dict = app.settings.get("apps")
-        default_app: BaseApp = apps.get("default")
-        raise AppSwitchException(default_app)
-
 class BaseApp(KeyApp):
+    # Media control in all Apps
+    encoder_increase = Media(ConsumerControlCode.VOLUME_INCREMENT)
+    encoder_decrease = Media(ConsumerControlCode.VOLUME_DECREMENT)
 
-    def __init__(self, app_pad: AppPad, settings: Optional[KeyAppSettings] = None):
+    def __init__(self, app_pad: AppPad, settings: Optional[Any] = None):
         super().__init__(app_pad, settings=settings)
-        self.encoder_increase = SwitchAppCommandBasedOnEncoderRotation(app_pad)
-        self.encoder_decrease = SwitchAppCommandBasedOnEncoderRotation(app_pad)
-        self.encoder_button = SwitchAppCommandBasedOnEncoderPress(app_pad)
+        # Go to previous app
+        self.encoder_button = PreviousAppCommand(self)
