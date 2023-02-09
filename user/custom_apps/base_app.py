@@ -22,3 +22,8 @@ class BaseApp(KeyApp):
         super().__init__(app_pad, settings=settings)
         # Go to previous app
         self.encoder_button = PreviousAppCommand(self)
+
+    def on_focus(self):
+        super().on_focus()
+        # Remove timer for app auto-exit
+        self.app_pad.delete_timer("auto_go_out_work")

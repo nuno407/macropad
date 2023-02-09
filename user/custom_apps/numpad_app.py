@@ -1,4 +1,4 @@
-from utils.apps.key import Key, KeyApp
+from utils.apps.key import Key
 from utils.commands import (
     Keycode,
     Press,

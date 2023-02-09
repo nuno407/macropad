@@ -3,7 +3,6 @@ try:
 except ImportError:
     pass
 from utils.apps.key import (
-    KeyApp,
     KeyAppSettings,
 )
 from utils.constants import (
@@ -41,7 +40,7 @@ from utils.constants import (
     COLOR_WINDOWS,
     COLOR_WINMAN,
 )
-from user.custom_apps import HomeApp, NumpadApp, VSCodeApp, MenuApp
+from user.custom_apps import MenuApp
 
 
 class AppSettings(KeyAppSettings):
