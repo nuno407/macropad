@@ -8,10 +8,9 @@ features, including double-tap support.
 from utils.app_pad import AppPad
 from utils.commands import AppSwitchException
 
-try:
-    from user import DEFAULT_APP
-except ImportError:
-    from default_settings import DEFAULT_APP
+
+from user import DEFAULT_APP
+
 
 app_pad = AppPad()
 current_app = DEFAULT_APP(app_pad)
