@@ -154,7 +154,7 @@ class BaseApp:
         self.macropad.stop_tone()
 
         self.display_on_focus()
-        self.macropad.display.show(self.display_group)
+        self.macropad.display.root_group = self.display_group
         self.macropad.display.refresh()
 
         self.pixels_on_focus()
