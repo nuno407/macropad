@@ -1,0 +1,14 @@
+# Live settings stay on the CIRCUITPY drives; only the .example
+# templates are tracked. The proxy's holds real WiFi credentials.
+esp_proxy/settings.toml
+macropad/settings.toml
+
+# local Claude Code config (machine paths + allowlisted commands)
+.claude/settings.local.json
+
+host/.venv/
+__pycache__/
+.pytest_cache/
+*.pyc
+.DS_Store
+.venv/

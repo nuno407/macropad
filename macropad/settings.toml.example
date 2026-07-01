@@ -1,0 +1,20 @@
+# Optional config for the pad firmware - copy to the root of the
+# CIRCUITPY drive next to code.py. CircuitPython's settings.toml supports
+# ONLY strings and integers, so latitude/longitude stay quoted; config.py
+# converts them to floats.
+
+MACROPAD_LAT = "38.722"
+MACROPAD_LON = "-9.139"
+MACROPAD_LOC_NAME = "Lisbon"
+
+# Modifier for the local HID shortcuts: "CMD" (macOS) or "CTRL"
+MACROPAD_MOD = "CMD"
+
+# Encoder detents per volume step (integer, default 1).
+# Raise it to make the knob less sensitive.
+MACROPAD_ENC_DIV = 1
+
+# Fine volume: hold Shift+Option around each volume event so macOS
+# moves in quarter-steps (4x smaller jumps). Defaults to 1 when
+# MACROPAD_MOD is "CMD", 0 otherwise; set 0/1 to force.
+MACROPAD_FINE_VOL = 1

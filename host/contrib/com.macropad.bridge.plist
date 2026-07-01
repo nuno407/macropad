@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.macropad.bridge</string>
+
+  <!-- Replace /ABSOLUTE/PATH/TO/macropad with your checkout (launchd
+       needs absolute paths). -u keeps stdout unbuffered for live logs. -->
+  <key>ProgramArguments</key>
+  <array>
+    <string>/ABSOLUTE/PATH/TO/macropad/host/.venv/bin/python</string>
+    <string>-u</string>
+    <string>/ABSOLUTE/PATH/TO/macropad/host/bridge.py</string>
+  </array>
+
+  <key>RunAtLoad</key>
+  <true/>
+  <key>KeepAlive</key>
+  <true/>
+
+  <key>StandardOutPath</key>
+  <string>/tmp/macropad-bridge.log</string>
+  <key>StandardErrorPath</key>
+  <string>/tmp/macropad-bridge.log</string>
+
+  <!-- Optional: restrict which hosts the proxy may contact.
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>MACROPAD_ALLOW_HOSTS</key>
+    <string>api.open-meteo.com,hacker-news.firebaseio.com</string>
+  </dict>
+  -->
+</dict>
+</plist>

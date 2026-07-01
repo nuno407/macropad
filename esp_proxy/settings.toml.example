@@ -1,0 +1,10 @@
+# T-QT bridge config - copy to settings.toml on the T-QT's CIRCUITPY
+# drive and fill in. settings.toml itself is gitignored: real creds
+# never enter the repo.
+
+WIFI_SSID = "your-ssid"
+WIFI_PASSWORD = "your-password"
+
+# Screen sleeps after this many seconds idle (button/pad input wakes
+# it; the pad's keepalive does not count). "0" = never sleep.
+SLEEP_S = "30"

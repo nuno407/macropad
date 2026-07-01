@@ -1,0 +1,15 @@
+# systemd user unit for the MacroPad bridge proxy (Linux).
+# Install: see README. Edit the path below to your checkout (%h = $HOME).
+
+[Unit]
+Description=MacroPad RP2040 bridge proxy
+
+[Service]
+ExecStart=%h/macropad/host/.venv/bin/python -u %h/macropad/host/bridge.py
+Restart=always
+RestartSec=5
+# Optional: restrict which hosts the proxy may contact (empty = allow all)
+#Environment=MACROPAD_ALLOW_HOSTS=api.open-meteo.com,hacker-news.firebaseio.com
+
+[Install]
+WantedBy=default.target
