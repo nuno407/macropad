@@ -13,6 +13,11 @@ and report its link state.
 Because the proxy knows nothing, you can swap it — a Python script on your
 PC, or the T-QT — and the pad's code never changes.
 
+<p align="center">
+  <img src="assets/photos/1.jpeg" width="520"
+       alt="The MacroPad (Main page: weather, HN, copy/paste/mute, clock) next to the T-QT bridge showing its dashboard: WiFi, MacroPad and BLE all green, Lisbon time">
+</p>
+
 ```mermaid
 flowchart TB
     subgraph pad["Adafruit MacroPad RP2040 — macropad/ (the logic)"]
