@@ -69,11 +69,15 @@ _l_wifi_pre = Label(terminalio.FONT, text="WiFi:", color=0xFFFFFF, x=4, y=32)
 # Only the SSID scrolls (marquee) when it's too long for the remaining width.
 _l_wifi = ScrollingLabel(terminalio.FONT, max_characters=14, text="...",
                          animate_time=0.25, color=0xFFFFFF, x=40, y=32)
-_l_pad = Label(terminalio.FONT, text="Pad: ...", color=0xFFFFFF, x=4, y=52)
-_l_ble = Label(terminalio.FONT, text="BLE: ...", color=0xFFFFFF, x=4, y=72)
+# Same pattern as the WiFi row: white prefix, coloured status value.
+_l_pad_pre = Label(terminalio.FONT, text="MacroPad:", color=0xFFFFFF, x=4, y=52)
+_l_pad = Label(terminalio.FONT, text="...", color=0xFFFFFF, x=64, y=52)
+_l_ble_pre = Label(terminalio.FONT, text="BLE:", color=0xFFFFFF, x=4, y=72)
+_l_ble = Label(terminalio.FONT, text="...", color=0xFFFFFF, x=34, y=72)
 _l_clock = Label(terminalio.FONT, text="--:--:--", color=0xFFFFFF, scale=2, x=16, y=100)
 _l_tz = Label(terminalio.FONT, text="", color=0x808080, x=48, y=118)
-for _o in (_title, _l_wifi_pre, _l_wifi, _l_pad, _l_ble, _l_clock, _l_tz):
+for _o in (_title, _l_wifi_pre, _l_wifi, _l_pad_pre, _l_pad,
+           _l_ble_pre, _l_ble, _l_clock, _l_tz):
     _root.append(_o)
 display.root_group = _root
 
@@ -96,8 +100,12 @@ def _dashboard_update(pad_linked):
     if txt != _wifi_txt:   # only reassign on change, else the scroll resets
         _wifi_txt = txt
         _l_wifi.text = txt
-    _l_pad.text = "Pad: linked" if pad_linked else "Pad: --"
-    _l_ble.text = "BLE: connected" if blehid.connected() else "BLE: adv"
+    _l_pad.text = "linked" if pad_linked else "--"
+    _l_pad.color = 0x00FF00 if pad_linked else 0xFF4040
+    ble_up = blehid.connected()
+    # advertising is a waiting state, not a fault - orange, not red
+    _l_ble.text = "connected" if ble_up else "waiting for PC"
+    _l_ble.color = 0x00FF00 if ble_up else 0xFFA000
     if net.clock_ok:
         lt = time.localtime(time.time() + net.tz_off)
         _l_clock.text = "%02d:%02d:%02d" % (lt.tm_hour, lt.tm_min, lt.tm_sec)

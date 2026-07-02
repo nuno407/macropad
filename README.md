@@ -220,8 +220,10 @@ good, `-W` = internet but nowhere to type.
 
 ### The T-QT dashboard
 
-Title, **WiFi** (green/red, long SSIDs marquee-scroll), **Pad** link state
-(alive = a frame heard in the last 5 s), **BLE** (connected/advertising), and
+Title, then three status rows — white label, coloured value: **WiFi**
+(green SSID / red `off`, long SSIDs marquee-scroll), **MacroPad** (green
+`linked` / red `--`; alive = a frame heard in the last 5 s), **BLE** (green
+`connected` / orange `waiting for PC` while advertising) — and
 a **live Lisbon clock** (`HH:MM:SS` via NTP; WET/WEST computed locally by
 the EU DST rule). The screen
 sleeps after `SLEEP_S` idle — the pad's 4 s keepalive deliberately does *not*
@@ -319,7 +321,7 @@ on-device `settings.toml` is likewise never copied into the repo, and its
 - **`W` stuck down / "proxy offline"** → the proxy isn't reachable. PC daemon:
   is `bridge.py` running? T-QT: is it powered, is the STEMMA cable seated?
   Check the **net proxy** setting matches your hardware.
-- **T-QT dashboard shows `Pad: --`** → the pad isn't in `uart` mode, or the
+- **T-QT dashboard shows `MacroPad: --`** → the pad isn't in `uart` mode, or the
   cable is loose. The pad sends a keepalive every 4 s; 5 s of silence flips
   the indicator.
 - **BLE keyboard invisible on macOS** → the advertisement must carry

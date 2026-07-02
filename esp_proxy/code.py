@@ -54,7 +54,7 @@ def send(obj):
 
 link_pc = None
 link_net = None
-last_pad = 0.0
+last_pad = -999.0   # far past: "linked" only after a real frame arrives
 
 
 def send_link(force=False):
