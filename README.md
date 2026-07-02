@@ -190,7 +190,11 @@ The menu lists the key pages plus `Settings...`:
 |------|------|
 | **Main**   | K0 weather · K1 HN top story (net, blue) · K9 copy · K10 paste · K11 `MOD`+Shift+M (hid, amber) |
 | **Media**  | K0 prev · K1 play/pause · K2 next · K3 mute (consumer keys, purple) |
+| **Dev**    | K0 go to definition of the **hovered** symbol (⌘-click) · K1 go back (⌃−) — K3 `del<` delete to line start (⌃U) · K4 `del>` delete everything after the selected char (→ then ⌃K) |
 | **Numpad** | `7 8 9 / 4 5 6 / 1 2 3 / 0 . Enter` |
+
+The **active page is remembered across reboots** (in
+`macropad_prefs.json`, alongside the settings below).
 
 **Settings** (live, persisted in `macropad_prefs.json` on the pad — *not* in
 `settings.toml`): knob speed, fine volume, LED brightness, sleep timeout,

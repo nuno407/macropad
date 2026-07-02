@@ -30,6 +30,7 @@ WEATHER_PICK = ["current.temperature_2m", "current.wind_speed_10m",
 view = {"mode": "idle", "cur": 0, "top": 0, "edit": 0}
 KEYMAP = {}
 page_i = 0
+prefs_due = 0.0   # deferred prefs write (flash writes stall the loop)
 
 # ------------------------------ drawing -----------------------------------
 
@@ -58,7 +59,7 @@ def base_color(n):
     kind = KEYMAP.get(n, (None,))[0]
     if kind == "net":
         return (0, 30, 80)
-    if kind == "hid":
+    if kind in ("hid", "fn"):
         return (70, 35, 0)
     if kind == "cc":
         return (50, 0, 60)
@@ -164,7 +165,8 @@ def act_hn(key):
 
 
 # ------------------------ pages, menu, settings ---------------------------
-# ("net", function)   -> runs an action defined above
+# ("net", function)   -> runs a network action defined above (blue LED)
+# ("fn", function)    -> runs a local function (amber LED, like hid)
 # ("hid", [keycodes]) -> chord delivered to the PC
 # ("cc", code)        -> consumer-control tap (media keys)
 PAGE_MAIN = {
@@ -180,6 +182,31 @@ PAGE_MEDIA = {
     2: ("cc", ConsumerControlCode.SCAN_NEXT_TRACK),
     3: ("cc", ConsumerControlCode.MUTE),
 }
+def act_del_right(key):
+    """Delete everything AFTER the selected character. A bare Ctrl-K
+    kills from the insertion point, which sits BEFORE the block cursor,
+    so the highlighted char would die too - step right once first.
+    (del< needs no such fix: it kills strictly left of the point.)"""
+    ok = (proto.deliver_keys([Keycode.RIGHT_ARROW])
+          and proto.deliver_keys([Keycode.CONTROL, Keycode.K]))
+    if not ok:
+        flash(key, RED)
+
+
+def act_goto_def(key):
+    """Go to definition of the symbol under the MOUSE pointer: VS Code's
+    F12 works at the text caret, but hovering means the caret is
+    elsewhere - Cmd+click is the pointer-position equivalent."""
+    if not proto.deliver_click([config.MOD]):
+        flash(key, RED)  # off-USB: the BLE path has no mouse
+
+
+PAGE_DEV = {  # row 1: code navigation (VS Code) - row 2: terminal line editing
+    0: ("fn", act_goto_def),                       # go to def under the pointer
+    1: ("hid", [Keycode.CONTROL, Keycode.MINUS]),  # go back (where I came from)
+    3: ("hid", [Keycode.CONTROL, Keycode.U]),      # backward-kill-line: cut to line start
+    4: ("fn", act_del_right),                      # cut after the selected char
+}
 PAGE_NUMPAD = {  # laid out like a numpad: 789 / 456 / 123 / 0.Enter
     0: ("hid", [Keycode.SEVEN]), 1: ("hid", [Keycode.EIGHT]),
     2: ("hid", [Keycode.NINE]), 3: ("hid", [Keycode.FOUR]),
@@ -194,6 +221,8 @@ PAGES = (  # name, keymap, per-key labels for the on-screen grid
       9: "copy", 10: "paste", 11: "mute"}),
     ("Media", PAGE_MEDIA,
      {0: "prev", 1: "play", 2: "next", 3: "mute"}),
+    ("Dev", PAGE_DEV,
+     {0: "def", 1: "back", 3: "del<", 4: "del>"}),
     ("Numpad", PAGE_NUMPAD,
      {0: "7", 1: "8", 2: "9", 3: "4", 4: "5", 5: "6",
       6: "1", 7: "2", 8: "3", 9: "0", 10: ".", 11: "enter"}),
@@ -210,9 +239,14 @@ SETTINGS = (  # label, prefs key, choices; key None = action entry
 
 
 def set_page(i):
-    global page_i, KEYMAP
+    global page_i, KEYMAP, prefs_due
     page_i = i
     KEYMAP = PAGES[i][1]
+    if config.PAGE != i:
+        config.PAGE = i
+        # Debounced: a flash write stalls the loop noticeably, so don't
+        # write while the user is still flipping - save once settled.
+        prefs_due = time.monotonic() + 2.0
     for k in range(12):
         macropad.pixels[k] = base_color(k)
     draw_title()
@@ -236,7 +270,7 @@ def run_key(n):
     elif kind == "cc":
         if not proto.deliver_keys([], cc=arg):
             flash(n, RED)
-    elif kind == "net":
+    elif kind in ("net", "fn"):
         arg(n)
 
 

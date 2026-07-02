@@ -11,6 +11,7 @@ import rtc
 import supervisor
 
 from adafruit_hid.keycode import Keycode
+from adafruit_hid.mouse import Mouse
 
 import config
 import shared
@@ -164,6 +165,27 @@ def deliver_keys(codes, cc=None):
         send(msg)
         return True
     return False
+
+
+def deliver_click(codes):
+    """Hold modifier `codes`, LEFT-click at the current mouse position,
+    release. USB only - the proxy's BLE HID has no mouse, so off-USB
+    this reports failure (red flash) instead of clicking nothing."""
+    if not supervisor.runtime.usb_connected:
+        return False
+    try:
+        if codes:
+            shared.macropad.keyboard.press(*codes)
+        shared.macropad.mouse.click(Mouse.LEFT_BUTTON)
+        return True
+    except Exception:
+        return False
+    finally:
+        if codes:
+            try:
+                shared.macropad.keyboard.release(*codes)
+            except Exception:
+                pass
 
 
 def send_volume(code):

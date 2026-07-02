@@ -72,7 +72,9 @@ def on_connect():
     ui.draw_status()
 
 
-ui.set_page(0)
+# restore the page that was active before the reboot (0 if the saved
+# index no longer exists, e.g. after a page was removed)
+ui.set_page(config.PAGE if 0 <= config.PAGE < len(ui.PAGES) else 0)
 
 was_connected = link_connected()
 was_pc = pc_connected()
@@ -296,6 +298,10 @@ while True:
 
     if was_connected and now >= state["time_due"]:
         proto.sync_clock()
+
+    if ui.prefs_due and now >= ui.prefs_due:
+        ui.prefs_due = 0.0
+        config.save_prefs()  # best-effort: read-only FS = session-only
 
     if now >= state["tick_due"]:
         state["tick_due"] = now + 0.25  # catch second flips promptly

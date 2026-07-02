@@ -2,7 +2,10 @@
 #
 # 1. Hides the CIRCUITPY drive unless KEY12 is held while plugging in -
 #    the on-device settings.toml holds credentials, so the filesystem
-#    stays invisible to whatever computer the pad is connected to.
+#    stays invisible to whatever computer the pad is connected to. With
+#    the drive hidden the filesystem is remounted WRITABLE for the
+#    firmware, so prefs (macropad_prefs.json) persist; while KEY12-
+#    mounted the computer owns it and prefs are session-only.
 # 2. Enables a SECOND USB CDC serial channel ("data") next to the REPL
 #    console; the bridge protocol runs on "data" so the REPL stays free.
 # 3. Enables the keyboard/mouse/consumer-control HID devices.
@@ -22,6 +25,10 @@ button.pull = digitalio.Pull.UP
 # Disable devices only if button is not pressed.
 if button.value:
    storage.disable_usb_drive()
+   # Hiding the drive is NOT enough: the FS stays read-only to the
+   # firmware until it is remounted. Without this, saving any pref
+   # (page, brightness, link...) silently fails.
+   storage.remount("/", readonly=False)
 
 # Enable console and data
 usb_cdc.enable(console=True, data=True)

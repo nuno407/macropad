@@ -46,6 +46,7 @@ SLEEP_MIN = 5          # screen/LEDs off after this many idle minutes (0=never)
 #   "uart" -> busio.UART on the STEMMA QT pins (the T-QT proxy)
 # Changing it takes effect after a reload (Ctrl-D / save / replug).
 LINK_MODE = "usb"
+PAGE = 0               # active key page, remembered across reboots
 
 try:
     with open(PREFS_FILE) as _f:
@@ -55,6 +56,7 @@ try:
     BRIGHT_PCT = int(_p.get("brightness", BRIGHT_PCT))
     SLEEP_MIN = int(_p.get("sleep", SLEEP_MIN))
     LINK_MODE = "uart" if _p.get("link") == "uart" else "usb"
+    PAGE = int(_p.get("page", PAGE))
 except Exception:
     pass
 
@@ -68,7 +70,8 @@ def save_prefs():
                        "fine_vol": 1 if FINE_VOL else 0,
                        "brightness": BRIGHT_PCT,
                        "sleep": SLEEP_MIN,
-                       "link": LINK_MODE}, f)
+                       "link": LINK_MODE,
+                       "page": PAGE}, f)
     except OSError:
         return False
     return True
