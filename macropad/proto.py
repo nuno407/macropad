@@ -169,23 +169,27 @@ def deliver_keys(codes, cc=None):
 
 def deliver_click(codes):
     """Hold modifier `codes`, LEFT-click at the current mouse position,
-    release. USB only - the proxy's BLE HID has no mouse, so off-USB
-    this reports failure (red flash) instead of clicking nothing."""
-    if not supervisor.runtime.usb_connected:
-        return False
-    try:
-        if codes:
-            shared.macropad.keyboard.press(*codes)
-        shared.macropad.mouse.click(Mouse.LEFT_BUTTON)
+    release. USB when enumerated; otherwise forwarded to the proxy as
+    {"t":"hid","k":[...],"mc":1} - its BLE HID is a composite device
+    with a mouse, so the click lands wherever the pointer hovers."""
+    if supervisor.runtime.usb_connected:
+        try:
+            if codes:
+                shared.macropad.keyboard.press(*codes)
+            shared.macropad.mouse.click(Mouse.LEFT_BUTTON)
+            return True
+        except Exception:
+            return False
+        finally:
+            if codes:
+                try:
+                    shared.macropad.keyboard.release(*codes)
+                except Exception:
+                    pass
+    if shared.state["bt_pc"]:
+        send({"t": "hid", "k": list(codes), "mc": 1})
         return True
-    except Exception:
-        return False
-    finally:
-        if codes:
-            try:
-                shared.macropad.keyboard.release(*codes)
-            except Exception:
-                pass
+    return False
 
 
 def send_volume(code):

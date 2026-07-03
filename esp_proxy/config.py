@@ -16,4 +16,7 @@ NTP_PERIOD = 6 * 3600     # re-sync the RTC this often (s)
 PAD_TIMEOUT = 5           # s without a frame => pad considered offline
 ROTATION = 180            # display orientation (owner preference)
 SLEEP_S = int(os.getenv("SLEEP_S") or "30")   # idle screen-off; 0 = never
-BLE_NAME = "MacroPad Bridge"
+# Mirror the pad's USB identity so the PC sees the same device fields
+# whether keys arrive over USB or through this proxy.
+BLE_NAME = "Macropad RP2040"
+BLE_MANUFACTURER = "Adafruit Industries LLC"

@@ -198,7 +198,7 @@ def act_goto_def(key):
     F12 works at the text caret, but hovering means the caret is
     elsewhere - Cmd+click is the pointer-position equivalent."""
     if not proto.deliver_click([config.MOD]):
-        flash(key, RED)  # off-USB: the BLE path has no mouse
+        flash(key, RED)  # no PC link (USB or BT) right now
 
 
 PAGE_DEV = {  # row 1: code navigation (VS Code) - row 2: terminal line editing

@@ -18,7 +18,7 @@ Libraries (/lib, bundle major must match CircuitPython major):
 
 Wire protocol v1 (minimal; a change must update macropad/, esp_proxy/ AND host/):
   pad -> proxy: hello / ping (liveness) / time (clock request)
-                http{id,m,url,pick?} / hid{k,cc?} / enc{d}
+                http{id,m,url,pick?} / hid{k,cc?,mc?} / enc{d}
   proxy -> pad: pong / time{epoch} (UTC; answered once NTP has synced)
                 res{id,st,v?}|{id,err} / link{pc,net}
 Unknown message types are ignored by both sides. Both devices compute

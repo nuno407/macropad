@@ -26,7 +26,8 @@ Wire protocol v1 (transport-agnostic, minimal):
                  "pick":["current.temperature_2m"]}      pick optional
                 {"t":"hid","k":[...],"cc":233}           deliver keys to the
                   PC over the proxy's Bluetooth HID link (hold chord k,
-                  tap consumer code cc, release)
+                  tap consumer code cc, release); {"mc":1} left-clicks
+                  the mouse instead of tapping cc
                 {"t":"enc","d":1}                        one confirmed
                   encoder detent (+/-1); the proxy treats it as user
                   activity (wakes its screen)

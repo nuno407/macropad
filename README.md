@@ -160,7 +160,8 @@ cp esp_proxy/settings.toml.example /Volumes/CIRCUITPY/settings.toml  # edit cred
 ```
 
 Connect the STEMMA cable, set the pad's **net proxy** menu setting to `uart`,
-and pair **"MacroPad Bridge"** from the PC's Bluetooth settings. The T-QT
+and pair **"Macropad RP2040"** from the PC's Bluetooth settings (the proxy
+presents the same device identity the pad itself has on USB). The T-QT
 dashboard shows WiFi (scrolling SSID), pad link, BLE state, and a Lisbon
 clock; the screen sleeps after `SLEEP_S` seconds idle and wakes on a button
 press or pad input.
@@ -195,7 +196,7 @@ The menu lists the key pages plus `Settings...`:
 |------|------|
 | **Main**   | K0 weather · K1 HN top story (net, blue) · K9 copy · K10 paste · K11 `MOD`+Shift+M (hid, amber) |
 | **Media**  | K0 prev · K1 play/pause · K2 next · K3 mute (consumer keys, purple) |
-| **Dev**    | K0 go to definition of the **hovered** symbol (⌘-click) · K1 go back (⌃−) — K3 `del<` delete to line start (⌃U) · K4 `del>` delete everything after the selected char (→ then ⌃K) |
+| **Dev**    | K0 go to definition of the **hovered** symbol (⌘-click, works over USB and BLE) · K1 go back (⌃−) — K3 `del<` delete to line start (⌃U) · K4 `del>` delete everything after the selected char (→ then ⌃K) |
 | **Numpad** | `7 8 9 / 4 5 6 / 1 2 3 / 0 . Enter` |
 
 The **active page is remembered across reboots** (in
@@ -250,7 +251,7 @@ Unknown message types are ignored by both sides.
 | pad → proxy | `{"t":"time"}` | clock request (on connect + hourly) |
 | pad → proxy | `{"t":"pong"}` | reply to the USB daemon's discovery ping |
 | pad → proxy | `{"t":"http","id":7,"m":"GET","url":"…","pick":[…]}` | run a request; `pick` optional |
-| pad → proxy | `{"t":"hid","k":[…],"cc":<int>}` | type over BLE: hold chord `k`, tap consumer code `cc`, release |
+| pad → proxy | `{"t":"hid","k":[…],"cc":<int>,"mc":1}` | type over BLE: hold chord `k`, tap consumer code `cc` — or left-click when `mc` is set — then release |
 | pad → proxy | `{"t":"enc","d":±1}` | one confirmed encoder detent (proxy screen-wake) |
 | proxy → pad | `{"t":"ping"}` | discovery probe (USB daemon only) |
 | proxy → pad | `{"t":"pong"}` | liveness reply; any inbound line marks the link alive |
@@ -330,7 +331,7 @@ on-device `settings.toml` is likewise never copied into the repo, and its
   cable is loose. The pad sends a keepalive every 4 s; 5 s of silence flips
   the indicator.
 - **BLE keyboard invisible on macOS** → the advertisement must carry
-  appearance 961 (keyboard); pair "MacroPad Bridge" from the Bluetooth menu.
+  appearance 961 (keyboard); pair "Macropad RP2040" from the Bluetooth menu.
 - **`ImportError: no module named ...` on the T-QT** → a `/lib` `.mpy` doesn't
   match the CircuitPython major version (9.x mpy won't load on 10.x). Refresh
   from the matching bundle.
