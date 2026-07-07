@@ -11,8 +11,9 @@ import board
 import digitalio
 import displayio
 import terminalio
+# bitmap_label.Label scrolls with the same API; scrolling_label is deprecated
+from adafruit_display_text.bitmap_label import Label as ScrollLabel
 from adafruit_display_text.label import Label
-from adafruit_display_text.scrolling_label import ScrollingLabel
 
 import blehid
 import config
@@ -67,8 +68,8 @@ _root.append(displayio.TileGrid(_bg, pixel_shader=_pal))
 _title = Label(terminalio.FONT, text="MacroPad Bridge", color=0x00FFFF, x=6, y=8)
 _l_wifi_pre = Label(terminalio.FONT, text="WiFi:", color=0xFFFFFF, x=4, y=32)
 # Only the SSID scrolls (marquee) when it's too long for the remaining width.
-_l_wifi = ScrollingLabel(terminalio.FONT, max_characters=14, text="...",
-                         animate_time=0.25, color=0xFFFFFF, x=40, y=32)
+_l_wifi = ScrollLabel(terminalio.FONT, max_characters=14, text="...",
+                      animate_time=0.25, color=0xFFFFFF, x=40, y=32)
 # Same pattern as the WiFi row: white prefix, coloured status value.
 _l_pad_pre = Label(terminalio.FONT, text="MacroPad:", color=0xFFFFFF, x=4, y=52)
 _l_pad = Label(terminalio.FONT, text="...", color=0xFFFFFF, x=64, y=52)

@@ -164,7 +164,9 @@ and pair **"Macropad RP2040"** from the PC's Bluetooth settings (the proxy
 presents the same device identity the pad itself has on USB). The T-QT
 dashboard shows WiFi (scrolling SSID), pad link, BLE state, and a Lisbon
 clock; the screen sleeps after `SLEEP_S` seconds idle and wakes on a button
-press or pad input.
+press or pad input. A hardware watchdog (`WATCHDOG_S`, default 30 s, `"0"` =
+off) auto-resets the proxy if the firmware ever hangs; the boot log prints
+the reset reason (`WATCHDOG` = a recovered hang).
 
 ### 2-alt. PC daemon instead of the T-QT
 

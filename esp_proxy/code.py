@@ -11,7 +11,8 @@ transport, protocol dispatch and the main loop.
 Wiring (T-QT <-> MacroPad, STEMMA QT cable):  SDA = pad TX -> T-QT RX,
   SCL = pad RX <- T-QT TX  (so busio.UART(tx=board.SCL, rx=board.SDA))
 settings.toml (see settings.toml.example): WIFI_SSID, WIFI_PASSWORD,
-  SLEEP_S (idle screen-off seconds, 0=never)
+  SLEEP_S (idle screen-off seconds, 0=never),
+  WATCHDOG_S (hang auto-reset seconds, 0=off)
 Libraries (/lib, bundle major must match CircuitPython major):
   adafruit_ble adafruit_hid adafruit_requests adafruit_connection_manager
   adafruit_ntp adafruit_display_text adafruit_ticks
@@ -30,11 +31,20 @@ import time
 
 import board
 import busio
+import microcontroller
+import watchdog
 
 import blehid
 import config
 import net
 import ui
+
+# Hardware watchdog: recovers hangs Python can't catch (radio-stack wedges,
+# a blocked boot). RESET mode can't be disarmed once set, so WATCHDOG_S=0
+# in settings.toml is the way to get a usable REPL.
+if config.WATCHDOG_S:
+    microcontroller.watchdog.timeout = config.WATCHDOG_S
+    microcontroller.watchdog.mode = watchdog.WatchDogMode.RESET
 
 # STEMMA QT cable to the pad: TX on SCL, RX on SDA (pad uses SDA=TX/SCL=RX).
 uart = busio.UART(board.SCL, board.SDA, baudrate=115200, timeout=0,
@@ -89,6 +99,8 @@ def handle(msg):
 
 # ------------------------------- main loop --------------------------------
 
+# Why the last boot ended: POWER_ON / SOFTWARE / WATCHDOG (a recovered hang).
+print("reset:", str(microcontroller.cpu.reset_reason).split(".")[-1])
 blehid.ensure_advertising()
 net.up()
 net.sync_clock()
@@ -99,6 +111,8 @@ net_due = 0.0
 
 while True:
     now = time.monotonic()
+    if config.WATCHDOG_S:
+        microcontroller.watchdog.feed()
 
     data = uart.read(256)
     if data:

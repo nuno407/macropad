@@ -8,3 +8,8 @@ WIFI_PASSWORD = "your-password"
 # Screen sleeps after this many seconds idle (button/pad input wakes
 # it; the pad's keepalive does not count). "0" = never sleep.
 SLEEP_S = "30"
+
+# Hardware watchdog: auto-reset the proxy if the firmware hangs for this
+# many seconds. Set "0" to disable when working at the REPL — once armed
+# the watchdog cannot be turned off without a reset.
+WATCHDOG_S = "30"

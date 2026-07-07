@@ -52,8 +52,8 @@ Both run **CircuitPython 10.2.1**. `host/bridge.py` is an alternative proxy
   `adafruit_macropad_rp2040` build). T-QT = `.bin` for board id
   `lilygo_tqt_pro_psram` via esptool at `0x0`. `/lib` `.mpy` files must
   come from the bundle matching the CircuitPython **major** version.
-- **This is not a git repository** (owner's choice) — deletions are
-  permanent; be deliberate.
+- Git: work directly on `main`; commit messages are short descriptive
+  sentences (see `git log`). Commit only when asked.
 
 ## Hardware facts (verified the hard way — trust these)
 
@@ -78,8 +78,8 @@ Both run **CircuitPython 10.2.1**. `host/bridge.py` is an alternative proxy
 
 ## Conventions
 
-- Screen-sleep and creds are configured via `settings.toml`, not
-  constants — see the `.example` files. Both
+- Screen-sleep, the proxy's hang-reset watchdog and creds are configured
+  via `settings.toml`, not constants — see the `.example` files. Both
   devices show Europe/Lisbon time with no time-API dependency: the proxy
   syncs UTC via NTP and mirrors it to the pad (`time` message); both
   apply the identical local EU-DST-rule offset.

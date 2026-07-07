@@ -43,7 +43,8 @@ def up():
         pass
     try:
         log("wifi: connecting to", ssid)
-        wifi.radio.connect(ssid, os.getenv("WIFI_PASSWORD") or "")
+        wifi.radio.connect(ssid, os.getenv("WIFI_PASSWORD") or "",
+                           timeout=config.WIFI_CONNECT_TIMEOUT)
     except Exception as exc:
         log("wifi:", exc)
         return False
@@ -61,6 +62,9 @@ def sync_clock():
     """NTP -> local RTC (UTC), plus the Lisbon UTC offset + abbreviation."""
     global tz_off, tz_abbr, ntp_due, clock_ok
     if not wifi.radio.connected:
+        # Keep a retry scheduled: ntp_due 0.0 reads as "nothing pending" in
+        # code.py, which would otherwise mean no-WiFi-at-boot = no clock ever.
+        ntp_due = time.monotonic() + 5
         return
     try:
         pool = socketpool.SocketPool(wifi.radio)
